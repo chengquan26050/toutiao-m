@@ -24,18 +24,36 @@
            <van-button size="mini" round>编辑资料</van-button>
         </div>
       </div>
-
-      <van-grid :column-num="2">
-        <van-grid-item>
+      <!-- 用户数据 -->
+      <div class="data-stats">
+        <div class="data-item">
+          <span class="count">10</span>
+          <span class="text">头条</span>
+        </div>
+        <div class="data-item">
+          <span class="count">10</span>
+          <span class="text">关注</span>
+        </div>
+        <div class="data-item">
+          <span class="count">10</span>
+          <span class="text">粉丝</span>
+        </div>
+        <div class="data-item">
+          <span class="count">10</span>
+          <span class="text">获赞</span>
+        </div>
+      </div>
+      <!-- 宫格导航 -->
+      <van-grid class="grid-nav mb-9" :column-num="2" clickable>
+        <van-grid-item class="grid-item">
           <template #icon>
             <i class="toutiao toutiao-shoucang"></i>
-            
           </template>
           <template #text>
             <span class="text">收藏</span>
           </template>
         </van-grid-item>
-        <van-grid-item>
+        <van-grid-item class="grid-item">
           <template #icon>
             <i class="toutiao toutiao-lishi"></i>
           </template>
@@ -44,6 +62,7 @@
           </template>
         </van-grid-item>
       </van-grid>
+      <!-- /宫格导航 -->
     </div>
   </div>
 </template>
@@ -130,6 +149,23 @@ export default {
         .text {
           font-size: 23px;
         }
+      }
+    }
+  }
+    .grid-nav {
+    .grid-item {
+      height: 141px;
+      i.toutiao {
+        font-size: 45px;
+      }
+      .toutiao-shoucang {
+        color: #eb5253;
+      }
+      .toutiao-lishi {
+        color: #ff9d1d;
+      }
+      span.text {
+        font-size: 28px;
       }
     }
   }
