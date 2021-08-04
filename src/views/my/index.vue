@@ -1,0 +1,137 @@
+<template>
+  <div class="my-container">
+    <!-- 未登录 -->
+    <div class="header not-login">
+     <div class="login-btn" @click="$router.push('/login')">
+        <img class="mobile-img" src="~@/assets/mobile.png">
+        <span class="text">登录&nbsp;/&nbsp;注册</span>
+     </div>
+    </div>
+    <!-- 已登录 -->
+    <div class="header user-info">
+      <!-- 用户信息 -->
+      <div class="base-info">
+        <div class="left">
+          <van-image class="avatar"
+                     round
+                     fit="cover"
+                     src="https://img.yzcdn.cn/vant/cat.jpeg"
+                     />
+          <span class="name">黑马1号帅哥</span>
+        </div>
+
+        <div class="right">
+           <van-button size="mini" round>编辑资料</van-button>
+        </div>
+      </div>
+
+      <van-grid :column-num="2">
+        <van-grid-item>
+          <template #icon>
+            <i class="toutiao toutiao-shoucang"></i>
+            
+          </template>
+          <template #text>
+            <span class="text">收藏</span>
+          </template>
+        </van-grid-item>
+        <van-grid-item>
+          <template #icon>
+            <i class="toutiao toutiao-lishi"></i>
+          </template>
+          <template #text>
+            <span class="text">历史</span>
+          </template>
+        </van-grid-item>
+      </van-grid>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: '',
+  components: {},
+  props: {},
+  data() {
+    return {}
+  },
+  computed: {},
+  watch: {},
+  created() {},
+  mounted() {},
+  methods: {},
+}
+</script>
+
+<style lang="less" scoped>
+.my-container {
+  .header {
+    height: 361px;
+    background: url("~@/assets/banner.png");
+    background-size: cover;
+  }
+  .not-login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .login-btn {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      .mobile-img {
+        width: 132px;
+        height: 132px;
+        margin-bottom: 15px;
+      }
+      .text {
+        font-size: 28px;
+        color: #fff;
+      }
+    }
+  }
+  .user-info {
+    .base-info {
+      height: 231px;
+      padding: 76px 32px 23px;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .left {
+        display: flex;
+        align-items: center;
+        .avatar {
+          width: 132px;
+          height: 132px;
+          border: 4px solid #fff;
+          margin-right: 23px;
+        }
+        .name {
+          font-size: 30px;
+          color: #fff;
+        }
+      }
+    }
+    .data-stats {
+      display: flex;
+      .data-item {
+        height: 130px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        .count {
+          font-size: 36px;
+        }
+        .text {
+          font-size: 23px;
+        }
+      }
+    }
+  }
+}
+</style>
