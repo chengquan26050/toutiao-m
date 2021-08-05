@@ -1,23 +1,16 @@
 <template>
   <div class="my-container">
-    <!-- 未登录 -->
-    <div class="header not-login">
-     <div class="login-btn" @click="$router.push('/login')">
-        <img class="mobile-img" src="~@/assets/mobile.png">
-        <span class="text">登录&nbsp;/&nbsp;注册</span>
-     </div>
-    </div>
     <!-- 已登录 -->
-    <div class="header user-info">
+    <div class="header user-info" v-if="user">
       <!-- 用户信息 -->
       <div class="base-info">
         <div class="left">
           <van-image class="avatar"
                      round
                      fit="cover"
-                     src="https://img.yzcdn.cn/vant/cat.jpeg"
+                     :src="userInfo.photo"
                      />
-          <span class="name">黑马1号帅哥</span>
+          <span class="name">{{userInfo.name}}</span>
         </div>
 
         <div class="right">
@@ -27,23 +20,33 @@
       <!-- 用户数据 -->
       <div class="data-stats">
         <div class="data-item">
-          <span class="count">10</span>
+          <span class="count">{{userInfo.art_count}}</span>
           <span class="text">头条</span>
         </div>
         <div class="data-item">
-          <span class="count">10</span>
+          <span class="count">{{userInfo.follow_count}}</span>
           <span class="text">关注</span>
         </div>
         <div class="data-item">
-          <span class="count">10</span>
+          <span class="count">{{userInfo.fans_count}}</span>
           <span class="text">粉丝</span>
         </div>
         <div class="data-item">
-          <span class="count">10</span>
+          <span class="count">{{userInfo.like_count}}</span>
           <span class="text">获赞</span>
         </div>
       </div>
-      <!-- 宫格导航 -->
+
+    </div>
+    <!-- 未登录 -->
+    <div class="header not-login" v-else>
+     <div class="login-btn" @click="$router.push('/login')">
+        <img class="mobile-img" src="~@/assets/mobile.png">
+        <span class="text">登录&nbsp;/&nbsp;注册</span>
+     </div>
+    </div>
+    
+          <!-- 宫格导航 -->
       <van-grid class="grid-nav mb-9" :column-num="2" clickable>
         <van-grid-item class="grid-item">
           <template #icon>
@@ -63,23 +66,69 @@
         </van-grid-item>
       </van-grid>
       <!-- /宫格导航 -->
-    </div>
+      <van-cell title="消息通知" is-link />
+      <van-cell class="mb-9" title="小智同学" is-link />
+      <van-cell  
+          @click="onLogout"
+          v-if="user"
+          class="logout-cell"
+          clickable
+          title="退出登录"
+      />
   </div>
 </template>
 
 <script>
+import {mapState,mapMutations} from 'vuex'
+import {getUserInfo} from '@/api/user'
 export default {
   name: '',
   components: {},
   props: {},
   data() {
-    return {}
+    return {
+      userInfo:[]
+    }
   },
-  computed: {},
+  computed: {
+    ...mapState(['user']),
+  },
   watch: {},
-  created() {},
-  mounted() {},
-  methods: {},
+  created() {
+    if(this.user){
+      this.loadUserInfo()
+    }
+    
+  },
+  mounted() {
+    
+  },
+  methods: {
+    ...mapMutations(['setUser']),
+    onLogout(){
+      this.$dialog.confirm({
+        title: '标题',
+      })
+        .then(() => {
+          // on confirm
+          this.setUser(null)
+        })
+        .catch(() => {
+          // on cancel
+          console.log('no');
+        })
+      
+    },
+    async loadUserInfo(){
+      try{
+        const res=await getUserInfo()
+        console.log(res);
+        this.userInfo=res.data.data
+      }catch(err){
+        console.log(err);
+      }
+    }
+  },
 }
 </script>
 
@@ -168,6 +217,14 @@ export default {
         font-size: 28px;
       }
     }
+  }
+  .logout-cell {
+    text-align: center;
+    color: #d86262;
+  }
+
+  .mb-9 {
+    margin-bottom: 9px;
   }
 }
 </style>

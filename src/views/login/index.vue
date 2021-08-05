@@ -111,7 +111,7 @@ export default {
       // 提交表单请求
       try{
         const res = await login(user)
-        console.log('登陆成功',res);
+        this.$router.back()
         // token存储在vuex中
         this.$store.commit('setUser',res.data.data)
         // 成功轻提示
