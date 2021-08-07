@@ -13,41 +13,52 @@
     </van-nav-bar>
 
     <van-tabs  class="channel-tabs" v-model="active" swipeable animated border>
-    <van-tab v-for="channel in channels" :key="channel.id" :title="channel.name">
-          <article-list :channel="channel"/>
-       </van-tab>
-    
-    <!-- 右侧自定义内容 -->
-    <!-- 占位元素 -->
-    
-    <div slot="nav-right" class="placeholder">
-    </div>
-    
-    <!-- 右侧按钮 -->
-    <div slot="nav-right" class="hamburger-btn">
-        <i class="toutiao toutiao-gengduo"></i>
-    </div>
-    <!-- <template #nav-right>
-      <div class="hamburger-btn">
-        <i class="toutiao toutiao-gengduo"></i>
-      </div>
-    </template> -->
-</van-tabs>
-<!-- /频道列表 -->
+        <van-tab v-for="channel in channels" :key="channel.id" :title="channel.name">
+              <article-list :channel="channel"/>
+        </van-tab>
+        
+        <!-- 右侧自定义内容 -->
+        <!-- 占位元素 -->
+        
+        <div slot="nav-right" class="placeholder">
+        </div>
+        
+        <!-- 右侧按钮 -->
+        <div slot="nav-right" class="hamburger-btn" @click="editShow=true">
+            <i class="toutiao toutiao-gengduo"></i>
+        </div>
+        <!-- <template #nav-right>
+          <div class="hamburger-btn">
+            <i class="toutiao toutiao-gengduo"></i>
+          </div>
+        </template> -->
+    </van-tabs>
+    <!-- /频道列表 -->
+    <van-popup
+      v-model="editShow"
+      closeable
+      position="bottom"
+      close-icon-position="top-left"
+      :style="{ height: '100%' }"
+    >
+      <channel-edit></channel-edit>
+    </van-popup>
   </div>
 </template>
 
 <script>
 import {getUserChannel} from '@/api/user'
 import ArticleList from './conponents/article-list.vue'
+import ChannelEdit from './conponents/channel-edit.vue'
 export default {
   name: 'HomePage',
-  components: {ArticleList},
+  components: {ArticleList,ChannelEdit},
   props: {},
   data() {
     return {
       active:0,
-      channels:[]
+      channels:[],
+      editShow:false
     }
   },
   computed: {},

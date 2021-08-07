@@ -8,6 +8,9 @@ import './styles/index.less'
 
 import 'amfe-flexible'
 
+// 加载时间处理文件
+import './utils/dayjs'
+
 
 Vue.use(Vant);
 Vue.config.productionTip = false
