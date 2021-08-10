@@ -41,7 +41,10 @@
       close-icon-position="top-left"
       :style="{ height: '100%' }"
     >
-      <channel-edit></channel-edit>
+      <channel-edit 
+      :myChannel="channels" 
+      :active="active"
+      @update-active="onUpdateActive"></channel-edit>
     </van-popup>
   </div>
 </template>
@@ -58,7 +61,7 @@ export default {
     return {
       active:0,
       channels:[],
-      editShow:false
+      editShow:true
     }
   },
   computed: {},
@@ -71,12 +74,17 @@ export default {
     async loadChannel(){
       try{
         const res=await getUserChannel()
-        console.log(res);
+        // console.log(res);
         this.channels=res.data.data.channels
         // console.log(channels[0].name);
       }catch(err){
         console.log('获取失败');
       }
+    },
+    // 处理子组件触发的自定义事件
+    onUpdateActive(index,isShow){
+      this.active=index
+      this.editShow=isShow
     }
   },
 }

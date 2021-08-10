@@ -1,6 +1,7 @@
 <template>
   <div class="article-list">
-    <van-pull-refresh v-model="isLoading" 
+    <van-pull-refresh 
+    v-model="isLoading" 
     @refresh="onRefresh"
     :success-text="refreshText"
     :success-duration='1500'>
@@ -59,12 +60,12 @@ export default {
                 timestamp:this.timestamp||Date.now(),
                 with_top:1,
             })
-            console.log(res.data);
+            // console.log(res.data);
             // this.list=res.data.data.results
             //  1. 请求获取数据
             // 2. 把请求结果数据追加到list
             const results=res.data.data.results
-            console.log(results);
+            // console.log(results);
             this.list.push(...results)
             // 3. 加载状态结束
             this.loading=false
