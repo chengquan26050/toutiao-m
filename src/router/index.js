@@ -39,6 +39,13 @@ const routes = [
         component: () =>
             import ('@/views/login')
     },
+    {
+        path: '/search',
+        name: 'search',
+        // 路由懒加载：当访问到这个页面组件的时候才动态加载里面的内容
+        component: () =>
+            import ('@/views/search')
+    },
 ]
 
 const router = new VueRouter({

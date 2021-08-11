@@ -9,6 +9,7 @@
         size="small"
         round
         icon="search"
+        to="/search"
       >搜索</van-button>
     </van-nav-bar>
 
@@ -53,6 +54,8 @@
 import {getUserChannel} from '@/api/user'
 import ArticleList from './conponents/article-list.vue'
 import ChannelEdit from './conponents/channel-edit.vue'
+import {mapState} from 'vuex'
+import {getItem} from '@/utils/storage'
 export default {
   name: 'HomePage',
   components: {ArticleList,ChannelEdit},
@@ -61,21 +64,37 @@ export default {
     return {
       active:0,
       channels:[],
-      editShow:true
+      editShow:false
     }
   },
-  computed: {},
+  computed: {
+    ...mapState(['user']),
+  },
   watch: {},
   created() {
-    this.loadChannel()
+    // this.loadChannel()
+    // 进行判断
+    if(this.user){
+      // 如果用户已登录，直接从线上接口获取数据
+      this.loadChannel()
+    }else{
+      const localChannels=getItem('TOUTIAO_CHANNELS')
+      // 如果用户未登录直接从本地获取数据
+      if(localChannels){
+        this.channels=localChannels
+      }else{
+        // 本地没有数据，从线上接口获取数据
+        this.loadChannel()
+      }
+    }
   },
   mounted() {},
   methods: {
     async loadChannel(){
       try{
-        const res=await getUserChannel()
+        const {data}=await getUserChannel()
         // console.log(res);
-        this.channels=res.data.data.channels
+        this.channels=data.data.channels
         // console.log(channels[0].name);
       }catch(err){
         console.log('获取失败');
