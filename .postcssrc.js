@@ -38,7 +38,8 @@ module.exports = {
 
       // 配置要转换的 CSS 属性
       // * 表示所有
-      propList: ['*']
+      propList: ['*'],
+      exclude:'github-markdown'
     }
   }
 }

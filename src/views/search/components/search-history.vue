@@ -1,18 +1,20 @@
 <template>
   <div class="search-history">
       <van-cell title="搜索历史">
-          <span>全部删除</span>
-          <span>完成</span>
-          <van-icon name="delete"></van-icon>
+        <div v-if="isDeleteShow">
+          <span @click="$emit('clear')">全部删除</span>
+          &nbsp;&nbsp;
+          <span @click="isDeleteShow=false">完成</span>
+        </div>
+
+          <van-icon name="delete" v-else @click="isDeleteShow=true"></van-icon>
       </van-cell>
-      <van-cell title="历史项">
-          <van-icon name="close"></van-icon>
-      </van-cell>
-      <van-cell title="历史项">
-          <van-icon name="close"></van-icon>
-      </van-cell>
-      <van-cell title="历史项">
-          <van-icon name="close"></van-icon>
+      <van-cell 
+      @click="searchItemClick(item,ind)"
+      v-for="item,ind in list"
+      :key="ind"
+      :title="item">
+          <van-icon name="close" v-show="isDeleteShow"></van-icon>
       </van-cell>
   </div>
 </template>
@@ -21,15 +23,34 @@
 export default {
   name: 'SearchHistory',
   components: {},
-  props: {},
+  props: {
+    list:{
+      type:Array,
+      required:true,
+    }
+  },
   data() {
-    return {}
+    return {
+      isDeleteShow:false,
+    }
   },
   computed: {},
   watch: {},
   created() {},
   mounted() {},
-  methods: {},
+  methods: {
+    searchItemClick(item,ind){
+      if(this.isDeleteShow){
+        // 执行删除操作
+        // 如果props的值是一个引用数据类型，
+        // 那么只要不对他重新赋值，地址值不变没有影响
+        this.list.splice(ind,1)
+      }else{
+        // 执行搜索逻辑
+        this.$emit('search',item)
+      }
+    }
+  },
 }
 </script>
 

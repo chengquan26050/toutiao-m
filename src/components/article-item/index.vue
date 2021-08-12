@@ -1,6 +1,10 @@
 // 文章列表项组件
 <template>
-  <van-cell class="article-item">
+  <!-- :to="'/article/'+article.art_id"  -->
+  <!-- :to="{ name:'aericle',params:{articleId:article.art_id}}" -->
+  <van-cell 
+  :to="`/article/${article.art_id}` "
+  class="article-item">
     <template #title class="van-multi-ellipsis--l2">
       {{article.title}}
     </template>
