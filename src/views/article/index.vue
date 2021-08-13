@@ -1,3 +1,4 @@
+//文章详情
 <template>
   <div class="article-container">
     <!-- 导航栏 -->
@@ -36,25 +37,46 @@
           />
           <div slot="title" class="user-name">{{article.aut_name}}</div>
           <div slot="label" class="publish-date">{{article.pubdatee|relativeTime}}</div>
-          <van-button
-            class="follow-btn"
-            type="info"
-            color="#3296fa"
-            round
-            size="small"
-            icon="plus"
-          >关注</van-button>
-          <!-- <van-button
-            class="follow-btn"
-            round
-            size="small"
-          >已关注</van-button> -->
+          
+          <!-- 关注用户组件 -->
+          <!-- 如果我们在模板中要获取子组件传递过来的参数
+          使用$event -->
+          <!-- <FollowUser 
+          @update_follow="article.is_followed=$event"
+          :is_followed="article.is_followed"
+          :aut_id="article.aut_id"
+          ></FollowUser> -->
+          <!-- 如果父组件传给子组件的值，子组件也同步需要修改使用v-model -->
+          
+          <!-- <FollowUser 
+          :value="article.is_followed"
+          @input="article.is_followed=$event"
+          :aut_id="article.aut_id"
+          ></FollowUser> -->
+
+          <FollowUser 
+          v-model="article.is_followed"
+          :aut_id="article.aut_id"
+          ></FollowUser>
         </van-cell>
         <!-- /用户信息 -->
 
         <!-- 文章内容 -->
-        <div class="article-content markdown-body" v-html="article.content"></div>
+        <div 
+        ref="article-content"
+        class="article-content markdown-body" 
+        v-html="article.content"></div>
         <van-divider>正文结束</van-divider>
+
+
+        <!-- ========================文章评论列表==================== -->
+
+        <comment-list></comment-list>
+        
+        <!-- ========================/ 文章评论列表==================== -->
+
+
+
         <!-- 底部区域 -->
         <div class="article-bottom">
             <van-button
@@ -62,20 +84,28 @@
                 type="default"
                 round
                 size="small"
-              >写评论</van-button>
+            >写评论</van-button>
+              
             <van-icon
                 name="comment-o"
                 info="123"
                 color="#777"
-              />
-            <van-icon
+            />
+            <!-- <van-icon
                 color="#777"
                 name="star-o"
-              />
-            <van-icon
+              /> -->
+              
+            <!-- 收藏 -->
+              <CollextArticle v-model="article.is_collected" :art_id="article.art_id"></CollextArticle>
+            <!-- 点赞 -->
+            <!-- <van-icon
                 color="#777"
                 name="good-job-o"
-              />
+            /> -->
+            <!-- 点赞 -->
+            <LikeArticle v-model="article.attitude" :art_id="article.art_id" />
+            <!-- 转发 -->
             <van-icon name="share" color="#777777"></van-icon>
         </div>
         <!-- /底部区域 -->   
@@ -102,9 +132,14 @@
 
 <script>
 import {getArticleById} from '@/api/article'
+import { ImagePreview } from 'vant'
+import FollowUser from '@/components/follow-user'
+import CollextArticle from '@/components/collect-article'
+import LikeArticle from '@/components/like-article'
+import CommentList from './components/comment-list.vue'
 export default {
   name: '',
-  components: {},
+  components: {FollowUser,CollextArticle,LikeArticle,CommentList},
   props: {
     //   接收路由上传来的动态参数
       articleId: {
@@ -132,8 +167,21 @@ export default {
               const {data} = await getArticleById(this.articleId)
               console.log(data);
               this.article=data.data
-            //   关闭加载中状态
+
+              // 关闭加载中状态
               this.loading=false
+              
+              // 数据更新视图是异步流程
+              // 获取异步更新后的Dom内容
+              // 1、this.$nextTick(()=>{})
+              // 2、setTimeout(()=>{},0)
+              // this.$nextTick(()=>{
+              //   console.log(this.$refs['article-content']);
+              // })
+              setTimeout(() => {
+                this.previewImage()
+                // console.log(this.$refs['article-content']);
+              }, 0);
           }catch(err){
               console.log('请求失败',err);
             //   更新状态码
@@ -144,6 +192,23 @@ export default {
               this.loading=false
 
           }
+      },
+      previewImage(){
+        // 获取所有图片
+        const imgs=this.$refs['article-content'].querySelectorAll('img')
+        // 把图片地址存放在一个数组中
+        const images=[]
+        imgs.forEach((item,index)=>{
+          images.push(item.src)
+          item.onclick=()=>{
+             ImagePreview({
+               images,
+               startPosition: index,
+             });
+          }
+        })
+        // 给图片绑定点击事件
+        // 调用预览函数进行预览
       }
   },
 }
@@ -255,7 +320,7 @@ export default {
       line-height: 46px;
       color: #a7a7a7;
     }
-    .van-icon {
+   /deep/ .van-icon {
       font-size: 40px;
       .van-info {
         font-size: 16px;

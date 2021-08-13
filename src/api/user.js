@@ -22,3 +22,18 @@ export const getUserChannel=()=>axios({
     url:'/v1_0/user/channels',
     method:'GET'
 })
+
+// 关注用户
+export const addFollow=(target)=>axios({
+    url:'/v1_0/user/followings',
+    method:'POST',
+    data:{
+        target
+    }
+})
+
+// 取消关注
+export const deleteFollow=(target)=>axios({
+    url:`/v1_0/user/followings/${target}`,
+    method:'DELETE',
+})

@@ -9,7 +9,7 @@ import JSONBig from 'json-bigint'
 // console.log(JSONBig.parse(jsonStr).art_id.toString());//解决大数据问题
 
 const request = axios.create({
-    baseURL: "http://toutiao-app.itheima.net", // 基础路径
+    baseURL: "http://toutiao.itheima.net", // 基础路径
     // baseURL: "http://192.168.17.40:8000/" // 基础路径
     // baseURL: "http://192.168.17.27:8000" // 基础路径
     transformResponse: [function (data) {
