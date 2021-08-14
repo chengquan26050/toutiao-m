@@ -71,7 +71,11 @@
 
         <!-- ========================文章评论列表==================== -->
 
-        <comment-list></comment-list>
+        <comment-list 
+        @reply-click="onReply"
+        v-if="article.comm_count" 
+        :source="article.art_id"
+        :list="commentList"></comment-list>
         
         <!-- ========================/ 文章评论列表==================== -->
 
@@ -80,6 +84,7 @@
         <!-- 底部区域 -->
         <div class="article-bottom">
             <van-button
+                @click="isPostShow=true"
                 class="comment-btn"
                 type="default"
                 round
@@ -87,8 +92,9 @@
             >写评论</van-button>
               
             <van-icon
+                v-if="article.comm_count"
                 name="comment-o"
-                info="123"
+                :info="article.comm_count"
                 color="#777"
             />
             <!-- <van-icon
@@ -109,6 +115,20 @@
             <van-icon name="share" color="#777777"></van-icon>
         </div>
         <!-- /底部区域 -->   
+
+
+        <!-- ===================================发布评论============================= -->
+       <van-popup 
+       v-model="isPostShow" 
+       position="bottom" 
+       >
+       <comment-post :target="article.art_id" @post-success="onPostSuccess"></comment-post>
+       </van-popup>
+       
+        <!-- ===================================发布评论============================= -->
+      
+      
+      
       </div>
       <!-- /加载完成-文章详情 -->
 
@@ -127,6 +147,24 @@
       </div>
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） --> 
     </div>    
+    <!-- =================================评论回复================================= -->
+
+    <van-popup 
+       v-model="isReplyShow" 
+       position="bottom" 
+       style="height:100%"
+       >
+       <comment-reply 
+       v-if="isReplyShow"
+       :comment="currentComment" 
+       @close="isReplyShow=false"></comment-reply>
+    </van-popup>
+
+    <!-- ==================================评论回复================================ -->
+
+
+
+
   </div>
 </template>
 
@@ -137,9 +175,11 @@ import FollowUser from '@/components/follow-user'
 import CollextArticle from '@/components/collect-article'
 import LikeArticle from '@/components/like-article'
 import CommentList from './components/comment-list.vue'
+import CommentPost from './components/comment-post.vue'
+import CommentReply from './components/comment-reply.vue'
 export default {
   name: '',
-  components: {FollowUser,CollextArticle,LikeArticle,CommentList},
+  components: {FollowUser,CollextArticle,LikeArticle,CommentList, CommentPost, CommentReply},
   props: {
     //   接收路由上传来的动态参数
       articleId: {
@@ -147,11 +187,20 @@ export default {
           required:true,
       }
   },
+  provide:function(){
+    return{
+      articleId:this.articleId,
+    }
+  },
   data() {
     return {
         article:{},
         loading:true,//控制文章加载状态，默认是true
         errStatus:0,//错误的状态码
+        isPostShow:false,//弹出层
+        commentList:[],//评论列表数组
+        isReplyShow:false,//评论回复弹出层
+        currentComment:[],//储存每次点击回复的对象
     }
   },
   computed: {},
@@ -193,6 +242,7 @@ export default {
 
           }
       },
+      // 处理图片预览
       previewImage(){
         // 获取所有图片
         const imgs=this.$refs['article-content'].querySelectorAll('img')
@@ -209,6 +259,17 @@ export default {
         })
         // 给图片绑定点击事件
         // 调用预览函数进行预览
+      },
+      // 处理子组件触发的评论成功时间
+      onPostSuccess(data){
+        // console.log(data);
+        this.isPostShow=false
+        this.commentList.unshift(data)
+      },
+      onReply(comment){
+        console.log(comment);
+        this.isReplyShow=true
+        this.currentComment=comment
       }
   },
 }
